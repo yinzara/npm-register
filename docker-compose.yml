@@ -1,0 +1,34 @@
+version: '3.4'
+services:
+  npm-register:
+    build:
+      context: .
+      args:
+        NPM_OPTIONS: '--dev'
+    command:
+      - nodemon
+      - "--inspect=0.0.0.0"
+      - "--watch"
+      - "lib"
+      - "lib/start.js"
+    ports:
+      - 3000:3000
+      - 9229:9229
+    environment:
+#      NPM_REGISTER_STORAGE: "${NPM_REGISTER_STORAGE-:s3}"
+      AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID:-}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY:-}"
+      AWS_S3_BUCKET: "${AWS_S3_BUCKET:-}"
+      CACHE_PACKAGE_TTL: "${CACHE_PACKAGE_TTL-60}"
+      NODE_ENV: "${NODE_ENV:-production}"
+      UPLINK: "${UPLINK:-https://registry.npmjs.org}"
+      REDIS_URL: "${REDIS_URL:-}"
+      NPM_REGISTER_STORAGE: "gcs"
+      GCS_BUCKET: "${GCS_BUCKET:-1st-gaming-dev-npm-registry}"
+      GOOGLE_APPLICATION_CREDENTIALS: /application_default_credentials.json
+    volumes:
+      - ./lib:/srv/npm-register/src/lib
+      - data:/srv/npm-register/data
+      - ${GOOGLE_APPLICATION_CREDENTIALS}:/application_default_credentials.json
+volumes:
+  data: {}
