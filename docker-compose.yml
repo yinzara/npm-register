@@ -15,20 +15,38 @@ services:
       - 3000:3000
       - 9229:9229
     environment:
+# AWS S3 storage
 #      NPM_REGISTER_STORAGE: "${NPM_REGISTER_STORAGE-:s3}"
-      AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID:-}"
-      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY:-}"
-      AWS_S3_BUCKET: "${AWS_S3_BUCKET:-}"
+#      AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID:-}"
+#      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY:-}"
+#      AWS_S3_BUCKET: "${AWS_S3_BUCKET:-}"
+
+# Google Cloud storage
+      NPM_REGISTER_STORAGE: "gcs"
+      NPM_REGISTER_GCS_BUCKET: "${GCS_BUCKET:-1st-gaming-dev-npm-registry}"
+      GOOGLE_APPLICATION_CREDENTIALS: /application_default_credentials.json
+
+# Filesystem storage
+#      NPM_REGISTER_STORAGE: "fs"
+#      NPM_REGISTER_FS_DIRECTORY: /srv/npm-register/data
+
+#Must be 32 hexadecimal characters long (128 bits)
+      NPM_REGISTER_HTACCESS_CRYPTO: 'true'
+      NPM_REGISTER_CRYPTO_KEY: '64B502FE9CA39E3CAB5F71D9DC6DED9A'
+
       CACHE_PACKAGE_TTL: "${CACHE_PACKAGE_TTL-60}"
       NODE_ENV: "${NODE_ENV:-production}"
       UPLINK: "${UPLINK:-https://registry.npmjs.org}"
-      REDIS_URL: "${REDIS_URL:-}"
-      NPM_REGISTER_STORAGE: "gcs"
-      GCS_BUCKET: "${GCS_BUCKET:-1st-gaming-dev-npm-registry}"
-      GOOGLE_APPLICATION_CREDENTIALS: /application_default_credentials.json
+      REDIS_URL: "${REDIS_URL:-redis://redis:6379}"
+
     volumes:
       - ./lib:/srv/npm-register/src/lib
-      - data:/srv/npm-register/data
+      - /srv/npm-register/data
+      - ~/.ssh/id-tsg_rsa:~/.ssh/id_rsa
       - ${GOOGLE_APPLICATION_CREDENTIALS}:/application_default_credentials.json
-volumes:
-  data: {}
+  redis:
+    image: redis
+    ports:
+      - 6379:6378
+    volumes:
+      - /data

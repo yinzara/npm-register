@@ -22,7 +22,7 @@ WORKDIR /srv/npm-register/src
 ARG NPM_OPTIONS="--only=prod"
 
 # Deploy application
-COPY package.json /srv/npm-register/src/
+COPY package.json ./
 RUN npm install $NVM_OPTIONS
 
 COPY . /srv/npm-register/src

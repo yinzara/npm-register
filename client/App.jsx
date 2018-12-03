@@ -16,6 +16,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 import Header from './components/Header'
 import Modal from './components/Modal'
+import Login from './components/Login'
 
 const styles = theme => ({
   root: {
@@ -124,6 +125,9 @@ class App extends React.Component {
               <a href={item.tarball.tarball} className={this.classes.anchor}>
                 <IconButton color='default' aria-label='Download Tarball'><Icon>get_app</Icon></IconButton>
               </a>
+            </TableCell>
+            <TableCell>
+
             </TableCell>
           </TableRow>
         ))}

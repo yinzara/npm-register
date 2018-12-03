@@ -1,4 +1,4 @@
-/.idea
+.idea/workspace.xml
 .nyc_output
 coverage
 fs
